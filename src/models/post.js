@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('../db/mongoose')
 
 
 const PostSchema = new mongoose.Schema({
@@ -7,8 +7,7 @@ const PostSchema = new mongoose.Schema({
     required: 'Name is required'
   },
   photo: {
-    data: Buffer,
-    contentType: String
+    data: String,
   },
   likes: [{type: mongoose.Schema.ObjectId, ref: 'User'}],
   comments: [{
@@ -24,3 +23,5 @@ const PostSchema = new mongoose.Schema({
 })
 
 const Post = mongoose.model('Post', PostSchema)
+
+module.exports = Post

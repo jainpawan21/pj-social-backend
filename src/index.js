@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
 const userRouter = require('./routes/user')
+const postRouter = require('./routes/post')
 
 require('./db/mongoose')
 app.use(require('../utils/cors'));
 
 app.use(express.json())
 app.use(userRouter)
+app.use(postRouter)
 app.get('/push', (req,res) => {
   res.send('Hello')
 })

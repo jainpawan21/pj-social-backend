@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('../db/mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
     }
   }],
   avatar: {
-    type: Buffer
+    type: String
   },
   updated: Date,
   created: {
