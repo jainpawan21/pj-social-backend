@@ -169,7 +169,7 @@ router.delete('/users/me', auth, async (req, res) => {
 
 router.get('/users', auth, async (req,res) => {
   try {
-    const result = await User.find().select('_id name email created location')
+    const result = await User.find()
     res.send(result).status(200)
   }
   catch(e) {

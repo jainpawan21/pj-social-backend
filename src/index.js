@@ -4,6 +4,7 @@ const userRouter = require('./routes/user')
 const postRouter = require('./routes/post')
 
 require('./db/mongoose')
+
 app.use(require('../utils/cors'));
 
 app.use(express.json())

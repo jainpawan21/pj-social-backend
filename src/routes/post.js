@@ -5,31 +5,43 @@ const auth = require('../middleware/auth');
 const Post = require('../models/post');
 const sharp = require('sharp');
 const router = new express.Router()
+const path = require('path')
 
 
-const upload = multer({
-  limits: {
-    fileSize: 1000000
+
+ var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images/')
   },
   fileFilter(req,file,cb) {
+    console.log("IMAGE-" + Date.now() + path.extname(file.originalname))
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       return cb(new Error('Please upload a image'))
     }
     cb(undefined,true)
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname))
   }
 })
-router.post('/post',auth, upload.single('photo'), async (req,res) => {
+
+var upload = multer({ storage: storage, limits:{fileSize: 1000000} })
+
+router.post('/uploadphoto', auth, upload.single('photo'), (req,res) => {
+  console.log(req)
+  res.send(req.file.path).status(200)
+ }, (error, req, res, next) => {
+  res.status(400).send({error: error.message})
+})
+
+router.post('/post',auth, async (req,res) => {
   try {
     const post = new Post();
     post.text = req.body.text;
     post.postedBy = req.user._id;
-    if(req.file !== undefined){
-      const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250}).png().toBuffer()
-      var vals = (new Buffer(buffer)).toString('base64')
-      post.photo = vals
-    }
+    post.photo = req.body.photo;
     await post.save()
-    res.send(post).status(201)
+    res.send('Uploaded').status(201)
   }
   catch(e) {
     res.send(e).status(400)
